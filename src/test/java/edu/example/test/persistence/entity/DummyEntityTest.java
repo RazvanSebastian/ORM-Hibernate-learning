@@ -33,7 +33,7 @@ public class DummyEntityTest {
     @Test
     public void shouldPersistEntity() {
         // given
-        DummyEntity dummyEntity = new DummyEntity();
+        Dummy dummyEntity = new Dummy();
         dummyEntity.setValue("value");
 
         // when

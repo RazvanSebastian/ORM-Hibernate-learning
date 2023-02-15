@@ -3,10 +3,11 @@ package edu.example.test.persistence.entity;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Table
 @Entity
-public class DummyEntity implements Serializable {
+public class Dummy implements JpaEntity {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -28,5 +29,18 @@ public class DummyEntity implements Serializable {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Dummy dummy = (Dummy) o;
+        return id.equals(dummy.id) && value.equals(dummy.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, value);
     }
 }
