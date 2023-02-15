@@ -1,0 +1,3 @@
+edu\example\test\persistence\dao\BaseJpaDao.class
+edu\example\test\persistence\dao\dummy\DummyJpaDaoImpl.class
+edu\example\test\persistence\util\EntityManagerHelper.class

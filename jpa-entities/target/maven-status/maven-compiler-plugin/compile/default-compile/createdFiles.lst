@@ -1,0 +1,4 @@
+edu\example\test\dao\JpaDao.class
+edu\example\test\entities\Dummy.class
+edu\example\test\entities\JpaEntity.class
+edu\example\test\dao\DummyJpaDao.class
