@@ -1,7 +1,6 @@
 package edu.example.test.entities;
 
-import jakarta.persistence.*;
-
+import javax.persistence.*;
 import java.util.Objects;
 
 @Table

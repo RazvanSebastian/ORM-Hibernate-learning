@@ -3,9 +3,9 @@ package edu.example.test.persistence.dao;
 import edu.example.test.dao.JpaDao;
 import edu.example.test.entities.JpaEntity;
 import edu.example.test.persistence.util.EntityManagerHelper;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.Id;
-import jakarta.persistence.TransactionRequiredException;
+import javax.persistence.EntityManager;
+import javax.persistence.Id;
+import javax.persistence.TransactionRequiredException;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
