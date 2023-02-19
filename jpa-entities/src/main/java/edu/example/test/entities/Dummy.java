@@ -5,6 +5,8 @@ import java.util.Objects;
 
 @Table
 @Entity
+//@SelectBeforeUpdate - enable dirty checking for update method
+//@OptimisticLocking(type = OptimisticLockType.VERSION)
 public class Dummy implements JpaEntity {
     @Id
     @Column(name = "id", nullable = false)
@@ -12,6 +14,9 @@ public class Dummy implements JpaEntity {
     private Long id;
 
     private String value;
+
+    @Version
+    private int version;
 
     public Long getId() {
         return id;
@@ -27,6 +32,14 @@ public class Dummy implements JpaEntity {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     @Override
