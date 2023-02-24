@@ -3,29 +3,23 @@ package edu.example.test.persistence.dao;
 
 import edu.example.test.dao.DummyJpaDao;
 import edu.example.test.entities.Dummy;
-import edu.example.test.persistence.config.RootConfiguration;
+import edu.example.test.persistence.BaseTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-@ContextConfiguration(classes = RootConfiguration.class)
-@ExtendWith(SpringExtension.class)
-public class DummyJpaDaoImplTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class DummyJpaDaoImplTest extends BaseTest {
 
     @Autowired
     private DummyJpaDao dummyJpaDao;
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @BeforeEach
     public void clear() {
@@ -44,6 +38,20 @@ public class DummyJpaDaoImplTest {
         // then
         Assertions.assertNotNull(dummy.getId());
         Assertions.assertNotNull(entityManager.contains(dummy));
+    }
+
+    @Test
+    public void shouldSaveAll() {
+        // given
+        List<Dummy> dummies = IntStream.rangeClosed(1, 10)
+                .mapToObj(i -> new Dummy())
+                .collect(Collectors.toList());
+
+        // when
+        dummyJpaDao.saveAll(dummies);
+
+        // then
+        assertEquals(10, dummyJpaDao.count());
     }
 
     @Test
@@ -75,6 +83,13 @@ public class DummyJpaDaoImplTest {
     }
 
     @Test
+    public void shouldClear() {
+        // given
+
+
+    }
+
+    @Test
     public void shouldDelete() {
         // given
         Dummy dummyToDelete = new Dummy();
@@ -90,7 +105,7 @@ public class DummyJpaDaoImplTest {
     }
 
     @Test
-    public void shouldDeleteDetached(){
+    public void shouldDeleteDetached() {
         // given
         Dummy dummyToDelete = new Dummy();
         dummyToDelete.setValue("should delete");
@@ -104,5 +119,8 @@ public class DummyJpaDaoImplTest {
 
         // then
         Assertions.assertFalse(entityManager.contains(dummyToDelete));
-        Assertions.assertNull(dummyJpaDao.find(dummyToDelete.getId()));    }
+        Assertions.assertNull(dummyJpaDao.find(dummyToDelete.getId()));
+    }
+
+
 }

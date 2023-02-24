@@ -14,10 +14,20 @@
     <artifactId>jpa-entities</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <properties>
+        <lombok.version>1.18.26</lombok.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

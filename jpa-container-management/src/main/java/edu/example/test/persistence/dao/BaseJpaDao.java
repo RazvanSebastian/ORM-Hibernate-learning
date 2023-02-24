@@ -49,6 +49,22 @@ public abstract class BaseJpaDao<T extends JpaEntity, ID> implements JpaDao<T, I
     }
 
     @Override
+    public List<T> saveAll(List<T> entities) {
+        for (int i = 0; i < entities.size(); i++) {
+            entityManager.persist(entities.get(i));
+            if (i % 20 == 0) {
+                entityManager.flush();
+            }
+        }
+        return entities;
+    }
+
+    @Override
+    public Long count() {
+        return (Long) entityManager.createQuery("SELECT COUNT(entity) FROM " + entityClass.getSimpleName() + " entity").getSingleResult();
+    }
+
+    @Override
     public void delete(T entity) {
         entityManager.remove(entityManager.contains(entity) ? entity : entityManager.merge(entity));
     }

@@ -5,6 +5,18 @@
              version="2.1">
     <persistence-unit name="H2DB">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <!-- OneToOne association -->
+        <class>edu.example.test.entities.associations.oneToOne.User</class>
+        <class>edu.example.test.entities.associations.oneToOne.UserDetails</class>
+        <!-- ManyToOne association -->
+        <class>edu.example.test.entities.associations.manyToOne.Post</class>
+        <class>edu.example.test.entities.associations.manyToOne.PostComment</class>
+        <!-- OneToMany association -->
+        <class>edu.example.test.entities.associations.oneToMany.bidirectional.BidirectionalPhone</class>
+        <class>edu.example.test.entities.associations.oneToMany.bidirectional.BidirectionalPerson</class>
+        <class>edu.example.test.entities.associations.oneToMany.unidirectional.UnidirectionalPhone</class>
+        <class>edu.example.test.entities.associations.oneToMany.unidirectional.UnidirectionalPerson</class>
+        <!-- Dummy -->
         <class>edu.example.test.entities.Dummy</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>

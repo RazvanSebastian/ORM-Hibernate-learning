@@ -3,10 +3,10 @@ package edu.example.test.persistence.dao;
 import edu.example.test.dao.JpaDao;
 import edu.example.test.entities.JpaEntity;
 import edu.example.test.persistence.util.EntityManagerHelper;
+
 import javax.persistence.EntityManager;
 import javax.persistence.Id;
 import javax.persistence.TransactionRequiredException;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
@@ -56,6 +56,33 @@ public abstract class BaseJpaDao<T extends JpaEntity, ID> implements JpaDao<T, I
             throw new RuntimeException(e);
         }
         return entity;
+    }
+
+    @Override
+    public List<T> saveAll(List<T> entities) {
+        EntityManager entityManager = EntityManagerHelper.getNewInstance();
+        try {
+            for (int i = 0; i < entities.size(); i++) {
+                entityManager.persist(entities.get(i));
+                if (i % 20 == 0) {
+                    entityManager.flush();
+                }
+            }
+            EntityManagerHelper.commitAndClose(entityManager);
+            return entities;
+        } catch (RuntimeException e) {
+            EntityManagerHelper.rollbackAndClose(entityManager);
+            LOGGER.log(Level.SEVERE, e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Long count() {
+        EntityManager entityManager = EntityManagerHelper.getNewInstance();
+        Long result = (Long) entityManager.createQuery("SELECT COUNT(entity) FROM " + entityClass.getSimpleName() + " entity").getSingleResult();
+        EntityManagerHelper.commitAndClose(entityManager);
+        return result;
     }
 
     @Override
