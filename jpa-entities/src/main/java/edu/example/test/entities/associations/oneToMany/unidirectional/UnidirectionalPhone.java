@@ -1,7 +1,12 @@
 package edu.example.test.entities.associations.oneToMany.unidirectional;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
+@Getter
+@Setter
 @Entity(name = "UnidirectionalPhone")
 public class UnidirectionalPhone {
     @Id
@@ -18,19 +23,4 @@ public class UnidirectionalPhone {
         this.number = number;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
 }

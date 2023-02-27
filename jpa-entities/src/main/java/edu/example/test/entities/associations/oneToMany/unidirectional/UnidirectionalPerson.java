@@ -1,9 +1,14 @@
 package edu.example.test.entities.associations.oneToMany.unidirectional;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity(name = "UnidirectionalPerson")
 public class UnidirectionalPerson {
     @Id
@@ -15,19 +20,4 @@ public class UnidirectionalPerson {
     @JoinColumn(name = "person_id")
     private List<UnidirectionalPhone> phones = new ArrayList<>();
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public List<UnidirectionalPhone> getPhones() {
-        return phones;
-    }
-
-    public void setPhones(List<UnidirectionalPhone> phones) {
-        this.phones = phones;
-    }
 }

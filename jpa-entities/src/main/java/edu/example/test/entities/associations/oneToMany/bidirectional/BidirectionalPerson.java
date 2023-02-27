@@ -1,9 +1,14 @@
 package edu.example.test.entities.associations.oneToMany.bidirectional;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity(name = "BidirectionalPerson")
 public class BidirectionalPerson {
     @Id
@@ -13,7 +18,6 @@ public class BidirectionalPerson {
 
     @OneToMany(
             fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL,
             orphanRemoval = true,
             mappedBy = "person")
     private List<BidirectionalPhone> phones = new ArrayList<>();
@@ -26,21 +30,5 @@ public class BidirectionalPerson {
     public void removePhone(BidirectionalPhone phone) {
         phones.remove(phone);
         phone.setPerson(null);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public List<BidirectionalPhone> getPhones() {
-        return phones;
-    }
-
-    public void setPhones(List<BidirectionalPhone> phones) {
-        this.phones = phones;
     }
 }

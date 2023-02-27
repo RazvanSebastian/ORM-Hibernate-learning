@@ -8,13 +8,20 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Rules:
- * - Implements equals and hashCode on child side
- * - Use {@link org.hibernate.annotations.NaturalId} for euqlas and hashCode implementation if there are unique columns
- * - Keep in sync both sides, parent and child: create methods for add child and remove child
+ * 1. Owning side:
+ *      - {@link javax.persistence.ManyToOne}
+ *      - Set fetch to LAZY
+ *      - Equals and hashcode methods (use whenever is possible NaturalId column or a group which might create something unique)
+ * 2. Inverse side:
+ *      - {@link javax.persistence.OneToMany}
+ *      - Set fetch LAZY
+ *      - Orphan removal: true
+ *      - mappedBy
+ *      - Add and remove methods to synchronize both sides
  *
  * Use cases:
- * - When we really need a collection of the association on the parent side.
- *
+ * - Really needs a collection of the association on the parent side.
+ * - Few-to-Many
  */
 public class BidirectionalOneToManyTest extends BaseTest {
 
