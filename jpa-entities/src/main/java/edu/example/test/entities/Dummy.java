@@ -1,12 +1,15 @@
 package edu.example.test.entities;
 
+import org.hibernate.annotations.OptimisticLockType;
+import org.hibernate.annotations.OptimisticLocking;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Table
 @Entity
 //@SelectBeforeUpdate - enable dirty checking for update method
-//@OptimisticLocking(type = OptimisticLockType.VERSION)
+@OptimisticLocking(type = OptimisticLockType.VERSION)
 public class Dummy implements JpaEntity {
     @Id
     @Column(name = "id", nullable = false)

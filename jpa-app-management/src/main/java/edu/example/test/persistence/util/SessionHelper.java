@@ -7,6 +7,9 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
+import javax.persistence.EntityManagerFactory;
+import java.util.function.Supplier;
+
 public final class SessionHelper {
 
     private static SessionFactory sessionFactory;
@@ -19,6 +22,10 @@ public final class SessionHelper {
 
     public static Session getSession() {
         return sessionFactory.openSession();
+    }
+
+    public static Supplier<EntityManagerFactory> getEntityManagerFactory() {
+        return () -> sessionFactory.openSession().getEntityManagerFactory();
     }
 
     public static void closeFactory() {

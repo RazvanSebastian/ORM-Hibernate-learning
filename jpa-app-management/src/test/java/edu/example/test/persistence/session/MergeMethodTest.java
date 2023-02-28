@@ -103,8 +103,8 @@ public class MergeMethodTest extends AbstractMethodsTest {
         session.clear();
         session.getTransaction().commit();
 
-        session = SessionHelper.getSession();
-        session.getTransaction().begin();
+        final Session thirdSession = SessionHelper.getSession();
+        thirdSession.getTransaction().begin();
 
         final Session secondSession = SessionHelper.getSession();
         secondSession.getTransaction().begin();
@@ -113,22 +113,23 @@ public class MergeMethodTest extends AbstractMethodsTest {
         LOGGER.info(() -> "Second session: starts doing changes on saved object and increments version");
         final Dummy secondSessionDummy = secondSession.find(Dummy.class, detachedDummy.getId());
         secondSessionDummy.setValue("Second session changed value");
+        assertEquals(0, secondSessionDummy.getVersion());
         secondSession.flush();
         assertEquals(1, secondSessionDummy.getVersion());
         LOGGER.info(() -> "Second session: flushed changed");
 
         try {
-            LOGGER.info(() -> "First session: starts doing changes on the detached object");
-            detachedDummy.setValue("First session changed value");
-            LOGGER.info(() -> "First session: merge the detached updated value");
-            final Dummy mergedDummy = (Dummy) session.merge(detachedDummy);
-            assertEquals(0, mergedDummy.getVersion());
-            session.flush();
+            LOGGER.info(() -> "Third session: starts doing changes on the same row");
+            final Dummy thirdSessionDummy = thirdSession.find(Dummy.class, detachedDummy.getId());
+            thirdSessionDummy.setValue("Third session changed value");
+            assertEquals(0, thirdSessionDummy.getVersion());
+            LOGGER.info(() -> "Third session: flush the changes on the same row and exception is thown");
+            thirdSession.flush();
         } catch (RuntimeException e) {
             assertTrue(e instanceof PessimisticLockException);
         } finally {
             secondSession.getTransaction().commit();
-            session.getTransaction().commit();
+            thirdSession.getTransaction().commit();
         }
     }
 }
