@@ -1,9 +1,10 @@
 package edu.example.test.persistence.session;
 
 import edu.example.test.entities.Dummy;
-import org.hibernate.FlushMode;
+import edu.example.test.persistence.AbstractTest;
 import org.junit.jupiter.api.Test;
 
+import static org.hibernate.testing.transaction.TransactionUtil.doInHibernate;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -17,64 +18,63 @@ import static org.junit.jupiter.api.Assertions.*;
  * 5. On PERSISTED entities NOTHING happens
  * 6. On DETACHED entities ASSIGNS new id => duplicated records into DB after committing or flushing
  */
-public class SaveMethodTest extends AbstractMethodsTest {
+public class SaveMethodTest extends AbstractTest {
 
     @Test
     public void givenTransientObject_whenSaveIsCalled_thenAddToPersistenceContextAndStoreIntoDataBaseOnlyOnFlush() {
-        // given
-        final Dummy dummy = new Dummy();
-        session.setHibernateFlushMode(FlushMode.COMMIT);
-        assertFalse(session.contains(dummy));
+        doInHibernate(sessionFactorySupplier, session -> {
+            // given
+            final Dummy dummy = new Dummy();
+            assertFalse(session.contains(dummy));
 
-        // when
-        final Long generatedIdOnSave = (Long) session.save(dummy);
+            // when
+            final Long generatedIdOnSave = (Long) session.save(dummy);
 
-        // then
-        assertTrue(session.contains(dummy));
-        assertEquals(generatedIdOnSave, dummy.getId());
-        assertEquals(0, count(session));
+            // then
+            assertTrue(session.contains(dummy));
+            assertEquals(generatedIdOnSave, dummy.getId());
 
-        session.flush();
-        assertEquals(1, count(session));
+            doInHibernate(sessionFactorySupplier, countSession -> {
+                assertEquals(0, count(countSession));
+            });
 
-        session.getTransaction().commit();
-
+            assertEquals(1, count(session)); // will flush and INSERT is triggered
+        });
     }
 
     @Test
     public void givenPersistedEntity_whenSaveIsCalled_thenNothingHappens() {
-        // given
-        final Dummy dummy = new Dummy();
-        session.persist(dummy);
-        final Long idFromFirstPersist = dummy.getId().longValue();
+        doInHibernate(sessionFactorySupplier, session -> {
+            // given
+            final Dummy dummy = new Dummy();
+            session.persist(dummy);
+            final Long idFromFirstPersist = dummy.getId().longValue();
 
-        // when
-        session.save(dummy);
-        final Long idFromSecondPersist = dummy.getId().longValue();
-        session.getTransaction().commit();
+            // when
+            session.save(dummy);
+            final Long idFromSecondPersist = dummy.getId().longValue();
 
-        // then
-        assertEquals(idFromFirstPersist, idFromSecondPersist);
+            // then
+            assertEquals(idFromFirstPersist, idFromSecondPersist);
+        });
     }
 
     @Test
     public void givenDetachedEntity_whenSaveIsCalled_thenGenerateDuplicatedRecordsAfterFlush() {
-        // given
-        final Dummy dummy = new Dummy();
+        doInHibernate(sessionFactorySupplier, session -> {
+            // given
+            final Dummy dummy = new Dummy();
+            final Long idFromFirstSave = (Long) session.save(dummy);
 
-        final Long idFromFirstSave = (Long) session.save(dummy);
+            session.evict(dummy); // detach
 
-        session.evict(dummy);
-        assertNotNull(dummy.getId());
-        assertFalse(session.contains(dummy));
+            // when
+            final Long idFromSecondSave = (Long) session.save(dummy);
 
-        // when
-        final Long idFromSecondSave = (Long) session.save(dummy);
-        assertNotEquals(idFromFirstSave, idFromSecondSave);
-
-        session.flush();
-        assertEquals(2, count(session));
-
-        session.getTransaction().commit();
+            // then
+            assertNotEquals(idFromFirstSave, idFromSecondSave);
+            session.flush();
+            assertEquals(2, count(session));
+        });
     }
 }

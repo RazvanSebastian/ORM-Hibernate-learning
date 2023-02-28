@@ -1,8 +1,10 @@
 package edu.example.test.persistence.session;
 
 import edu.example.test.entities.Dummy;
+import edu.example.test.persistence.AbstractTest;
 import org.junit.jupiter.api.Test;
 
+import static org.hibernate.testing.transaction.TransactionUtil.doInHibernate;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -12,48 +14,55 @@ import static org.junit.jupiter.api.Assertions.*;
  * - ON PERSISTED -> FLUSH -> EVICT -> DELETE : delete by identifier of the passed object
  * - ON TRANSIENT -> DELETE : delete statement is triggered but nothing happens
  */
-public class RemoveMethodTest extends AbstractMethodsTest {
+public class RemoveMethodTest extends AbstractTest {
 
     @Test
     public void givenPersistedDummy_whenDeleteIsCalled_thenObjectIsDeleted() {
         // given
-        final Dummy dummy = new Dummy();
-        session.persist(dummy);
-        session.flush();
+        doInHibernate(sessionFactorySupplier, session -> {
+            final Dummy dummy = new Dummy();
+            session.persist(dummy);
+            session.flush();
 
-        // when
-        session.remove(dummy);
+            // when
+            session.remove(dummy);
 
-        // then
-        assertFalse(session.contains(dummy));
-        assertEquals(0, count(session));
+            // then
+            assertFalse(session.contains(dummy));
+            assertEquals(0, count(session));
+        });
     }
 
     @Test
     public void givenTransientDummyWithIdOfRelatedStoredData_whenDeleteIsCalled_thenObjectIsDeleted() {
-        // given
-        final Dummy dummy = new Dummy();
-        session.persist(dummy);
-        session.flush();
-        session.clear();
+        doInHibernate(sessionFactorySupplier, session -> {
+            // given
+            final Dummy dummy = new Dummy();
 
-        // when
-        session.remove(dummy);
+            session.persist(dummy);
+            session.flush();
+            session.clear();
 
-        // then
-        assertFalse(session.contains(dummy));
-        assertEquals(0, count(session));
+            // when
+            session.remove(dummy);
+
+            // then
+            assertFalse(session.contains(dummy));
+            assertEquals(0, count(session));
+        });
     }
 
     @Test
     public void givenTransientDummyWithoutRelatedStoredData_whenDeleteIsCalled_thenDeleteStatementIsTriggered() {
-        // given
-        final Dummy dummy = new Dummy();
+        doInHibernate(sessionFactorySupplier, session -> {
+            // given
+            final Dummy dummy = new Dummy();
 
-        // when
-        session.remove(dummy);
+            // when
+            session.remove(dummy);
 
-        // then
-        assertTrue(true);
+            // then
+            assertTrue(true);
+        });
     }
 }

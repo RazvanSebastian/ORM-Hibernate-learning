@@ -1,6 +1,5 @@
 package edu.example.test.persistence.util;
 
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
@@ -12,7 +11,7 @@ import java.util.function.Supplier;
 
 public final class SessionHelper {
 
-    private static SessionFactory sessionFactory;
+    public final static SessionFactory sessionFactory;
 
     static {
         StandardServiceRegistry standardServiceRegistry = new StandardServiceRegistryBuilder().configure().build();
@@ -20,15 +19,5 @@ public final class SessionHelper {
         sessionFactory = metadata.buildSessionFactory();
     }
 
-    public static Session getSession() {
-        return sessionFactory.openSession();
-    }
 
-    public static Supplier<EntityManagerFactory> getEntityManagerFactory() {
-        return () -> sessionFactory.openSession().getEntityManagerFactory();
-    }
-
-    public static void closeFactory() {
-        sessionFactory.close();
-    }
 }
