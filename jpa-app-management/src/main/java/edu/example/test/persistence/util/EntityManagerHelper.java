@@ -6,7 +6,7 @@ import javax.persistence.Persistence;
 
 public final class EntityManagerHelper {
 
-    private static EntityManagerFactory entityManagerFactory;
+    public static EntityManagerFactory entityManagerFactory;
 
     static {
         entityManagerFactory = Persistence.createEntityManagerFactory("H2DB");

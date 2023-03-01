@@ -6,6 +6,8 @@
     <persistence-unit name="H2DB">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>edu.example.test.entities.Dummy</class>
+        <class>edu.example.test.entities.lock.OptimisticVersionDummy</class>
+        <class>edu.example.test.entities.lock.OptimisticDirtyDummy</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="jakarta.persistence.jdbc.driver"

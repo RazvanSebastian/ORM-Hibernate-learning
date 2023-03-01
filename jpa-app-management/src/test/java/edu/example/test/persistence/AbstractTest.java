@@ -7,20 +7,19 @@ import org.junit.jupiter.api.BeforeEach;
 import javax.persistence.EntityManagerFactory;
 import java.util.function.Supplier;
 
+import static edu.example.test.persistence.util.EntityManagerHelper.entityManagerFactory;
 import static edu.example.test.persistence.util.SessionHelper.sessionFactory;
 import static org.hibernate.testing.transaction.TransactionUtil.doInHibernate;
 
 public class AbstractTest {
 
-    protected static Supplier<EntityManagerFactory> entityManagerFactorySupplierSupplier;
-    protected static Supplier<SessionFactory> sessionFactorySupplier;
+    protected Supplier<EntityManagerFactory> entityManagerFactorySupplierSupplier;
+    protected Supplier<SessionFactory> sessionFactorySupplier;
 
-    static {
-        entityManagerFactorySupplierSupplier = () -> sessionFactory.openSession().getEntityManagerFactory();
+    {
+        entityManagerFactorySupplierSupplier = () -> entityManagerFactory;
         sessionFactorySupplier = () -> sessionFactory;
     }
-
-    protected Session session;
 
     @BeforeEach
     void beforeEach() {

@@ -1,15 +1,17 @@
 package edu.example.test.entities;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
 
 import javax.persistence.*;
 import java.util.Objects;
 
+@Getter
+@Setter
 @Table
 @Entity
-//@SelectBeforeUpdate - enable dirty checking for update method
-@OptimisticLocking(type = OptimisticLockType.VERSION)
 public class Dummy implements JpaEntity {
     @Id
     @Column(name = "id", nullable = false)
@@ -18,32 +20,7 @@ public class Dummy implements JpaEntity {
 
     private String value;
 
-    @Version
-    private int version;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
+    private int countDown;
 
     @Override
     public boolean equals(Object o) {

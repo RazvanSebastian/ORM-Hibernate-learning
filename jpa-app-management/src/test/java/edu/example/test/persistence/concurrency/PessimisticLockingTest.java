@@ -9,10 +9,9 @@ import javax.persistence.OptimisticLockException;
 import javax.persistence.PessimisticLockException;
 
 import static org.hibernate.testing.transaction.TransactionUtil.doInJPA;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class LockingTest extends AbstractTest {
+public class PessimisticLockingTest extends AbstractTest {
 
     private long id;
 
@@ -21,36 +20,11 @@ public class LockingTest extends AbstractTest {
         doInJPA(entityManagerFactorySupplierSupplier, entityManager -> {
             entityManager.createQuery("DELETE FROM Dummy").executeUpdate();
             Dummy dummy = new Dummy();
+            dummy.setCountDown(1);
             entityManager.persist(dummy);
+
             entityManager.flush();
             id = dummy.getId();
-        });
-    }
-
-    /**
-     * 1. T1 and T2 starts by receiving the entity (T1_version = 0; T2_version = 0)
-     * 2. T2 do some updates and commit (T1_version = 1; T2_version = 0)
-     * 3. T1 do some updates and commit => Optimistic locking exception
-     * <p>
-     * This is happening when one transaction tries to commit updates on older versions of persisted data.
-     */
-    @Test
-    public void givenTwoParallelTransactions_whenBothTransactionsAreDoingChangesOnSameEntityVersion_thenOptimisticLockExceptionIsThrown() {
-        doInJPA(entityManagerFactorySupplierSupplier, entityManager1 -> {
-            Dummy dummyT1 = entityManager1.find(Dummy.class, id);
-            doInJPA(entityManagerFactorySupplierSupplier, entityManager2 -> {
-                Dummy dummyT2 = entityManager2.find(Dummy.class, id);
-                dummyT2.setValue("T2 value");
-                entityManager2.flush();
-                assertEquals(1, dummyT2.getVersion());
-            });
-            // The lock was released after T2 commit but T1 is doing updates on older version of the entity.
-            dummyT1.setValue("T1 value");
-            try {
-                entityManager1.flush();
-            } catch (RuntimeException e) {
-                assertTrue(e instanceof OptimisticLockException);
-            }
         });
     }
 
@@ -71,7 +45,7 @@ public class LockingTest extends AbstractTest {
                 Dummy dummyT2 = entityManager2.find(Dummy.class, id);
                 dummyT2.setValue("T2 value");
                 entityManager2.flush();
-                assertEquals(1, dummyT2.getVersion());
+//                assertEquals(1, dummyT2.getVersion());
 
                 // T2 doesn't release the lock and T1 tries to acquire the lock => Timeout exception and PessimisticLockException
                 dummyT1.setValue("T1 value");
