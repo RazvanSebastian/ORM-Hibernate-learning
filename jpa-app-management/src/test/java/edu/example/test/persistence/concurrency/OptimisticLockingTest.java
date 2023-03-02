@@ -17,6 +17,16 @@ import static org.hibernate.testing.transaction.TransactionUtil.doInJPA;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * Description:
+ * - Using entire rows versioning or row "columns versioning"
+ * - Used for dealing with concurrency conflicts
+ * - Detecting anomaly and react to it by throwing an exception to the user or try to retry by merging
+ * the changes from DB with the user changes
+ * Approaches:
+ * - Versioning table rows
+ * - Dirty optimistic locking by "versioning" changed columns
+ */
 public class OptimisticLockingTest {
     private static Supplier<EntityManagerFactory> entityManagerFactorySupplier;
 
@@ -85,6 +95,7 @@ public class OptimisticLockingTest {
     @Test
     public void testVersionOptimisticLockingError() {
         // given
+        clearOptimisticVersionDummy();
         AtomicReference<Long> id = initializeForOptimisticVersionLocking();
 
         // when + then
@@ -111,6 +122,7 @@ public class OptimisticLockingTest {
     @Test
     public void testVersionOptimisticLockingSolution() {
         // given
+        clearOptimisticVersionDummy();
         AtomicReference<Long> id = initializeForOptimisticVersionLocking();
 
         // when
@@ -176,6 +188,12 @@ public class OptimisticLockingTest {
             OptimisticDirtyDummy dummy = entityManager.find(OptimisticDirtyDummy.class, id.get());
             assertEquals(0, dummy.getCountDown());
             assertEquals("Name changed by dummy T1", dummy.getName());
+        });
+    }
+
+    private void clearOptimisticVersionDummy() {
+        doInJPA(entityManagerFactorySupplier, entityManager -> {
+            entityManager.createQuery("DELETE FROM OptimisticVersionDummy").executeUpdate();
         });
     }
 

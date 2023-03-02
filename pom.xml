@@ -21,6 +21,7 @@
         <hibernate.version>5.6.15.Final</hibernate.version>
         <h2.version>2.1.212</h2.version>
         <log4j.version>2.12.1</log4j.version>
+        <postgresql.version>42.5.4</postgresql.version>
     </properties>
 
     <dependencyManagement>
@@ -30,10 +31,15 @@
                 <artifactId>hibernate-core</artifactId>
                 <version>${hibernate.version}</version>
             </dependency>
+            <!--            <dependency>-->
+            <!--                <groupId>com.h2database</groupId>-->
+            <!--                <artifactId>h2</artifactId>-->
+            <!--                <version>${h2.version}</version>-->
+            <!--            </dependency>-->
             <dependency>
-                <groupId>com.h2database</groupId>
-                <artifactId>h2</artifactId>
-                <version>${h2.version}</version>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>

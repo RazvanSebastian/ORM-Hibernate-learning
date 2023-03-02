@@ -9,7 +9,7 @@ public final class EntityManagerHelper {
     public static EntityManagerFactory entityManagerFactory;
 
     static {
-        entityManagerFactory = Persistence.createEntityManagerFactory("H2DB");
+        entityManagerFactory = Persistence.createEntityManagerFactory("POSTGRESQL");
     }
 
     private EntityManagerHelper() {
