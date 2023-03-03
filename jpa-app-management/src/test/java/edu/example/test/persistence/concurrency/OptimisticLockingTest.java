@@ -139,6 +139,8 @@ public class OptimisticLockingTest {
                 dummyT1.setName("Name changed by dummy T1");
                 entityManager1.flush();
             } catch (RuntimeException e) {
+                // On mysql the connection has to force the connection closing
+                entityManager1.close();
                 retryTransactionOnOptimisticVersionLock(dummyT1, 1);
             }
         });
