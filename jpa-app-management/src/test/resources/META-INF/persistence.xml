@@ -3,7 +3,7 @@
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
              http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/persistence/persistence_2_1.xsd"
              version="2.1">
-    <persistence-unit name="POSTGRESQL">
+    <persistence-unit name="DBCONFIG">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>edu.example.test.entities.Dummy</class>
         <class>edu.example.test.entities.lock.OptimisticVersionDummy</class>
@@ -13,10 +13,9 @@
             <property name="javax.persistence.jdbc.driver"
                       value="com.mysql.cj.jdbc.Driver"/>
             <property name="javax.persistence.jdbc.url"
-                      value="jdbc:mysql://localhost:3306/hibernate_test"/>
+                      value="jdbc:mysql://localhost:3306/hibernate_test?sessionVariables=transaction_isolation='READ-COMMITTED'"/>
             <property name="javax.persistence.jdbc.user" value="root"/>
             <property name="javax.persistence.jdbc.password" value="password"/>
-            <property name="javax.persistence.query.timeout" value="100"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>

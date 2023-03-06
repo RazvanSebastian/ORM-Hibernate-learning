@@ -3,7 +3,7 @@
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
              http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/persistence/persistence_2_1.xsd"
              version="2.1">
-    <persistence-unit name="POSTGRESQL">
+    <persistence-unit name="DBCONFIG">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <!-- OneToOne association -->
         <class>edu.example.test.entities.associations.oneToOne.User</class>

@@ -9,7 +9,7 @@ public final class EntityManagerHelper {
     public static EntityManagerFactory entityManagerFactory;
 
     static {
-        entityManagerFactory = Persistence.createEntityManagerFactory("POSTGRESQL");
+        entityManagerFactory = Persistence.createEntityManagerFactory("DBCONFIG");
     }
 
     private EntityManagerHelper() {
