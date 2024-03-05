@@ -5,7 +5,10 @@ import edu.example.test.persistence.AbstractTest;
 import org.hibernate.TransientObjectException;
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 import static org.hibernate.testing.transaction.TransactionUtil.doInHibernate;
+import static org.hibernate.testing.transaction.TransactionUtil.doInJPA;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -17,6 +20,41 @@ import static org.junit.jupiter.api.Assertions.*;
  * - Throws exception on TRANSIENT objects
  */
 public class UpdateMethodTest extends AbstractTest {
+
+    @Test
+    void shouldUpdate() {
+        AtomicReference<Long> id = new AtomicReference<>();
+
+        doInJPA(entityManagerFactorySupplierSupplier, entityManager -> {
+            Dummy dummy = new Dummy();
+            dummy.setValue("Initial value");
+
+            entityManager.persist(dummy);
+
+            id.set(dummy.getId());
+        });
+
+        // Update entity with only one query => 1 SQL: UPDATE
+        doInJPA(entityManagerFactorySupplierSupplier, entityManager -> {
+            int result = entityManager.createQuery("UPDATE Dummy d SET d.value = :newValue where d.id = :id")
+                    .setParameter("newValue", "Updated value")
+                    .setParameter("id", id.get())
+                    .executeUpdate();
+            assertEquals(1, result);
+
+            result = entityManager.createQuery("UPDATE Dummy d SET d.value = :newValue where d.id = :id")
+                    .setParameter("newValue", "Updated value again")
+                    .setParameter("id", 10L)
+                    .executeUpdate();
+            assertEquals(0, result);
+        });
+
+        // Update entity by retrieving => 2 SQLs: SELECT + UPDATE
+        doInJPA(entityManagerFactorySupplierSupplier, entityManager -> {
+            Dummy dummy = entityManager.find(Dummy.class, id.get());
+            dummy.setValue("Update value with 2 SQLs");
+        });
+    }
 
     /**
      * Case: DETACHED -> PERSISTENT
@@ -34,6 +72,7 @@ public class UpdateMethodTest extends AbstractTest {
             final Long firstPersistId = dummy.getId();
 
             session.flush();
+
             assertEquals(1, count(session));
 
             session.evict(dummy);

@@ -29,6 +29,10 @@ public class Address {
     public Address() {
     }
 
+    public Address(Long id) {
+        this.id = id;
+    }
+
     public Address(String street, String number, String postalCode) {
         this.street = street;
         this.number = number;
@@ -40,11 +44,11 @@ public class Address {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Address address = (Address) o;
-        return street.equals(address.street) && number.equals(address.number) && postalCode.equals(address.postalCode);
+        return Objects.equals(id, address.id) && Objects.equals(street, address.street) && Objects.equals(number, address.number) && Objects.equals(postalCode, address.postalCode);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(street, number, postalCode);
+        return Objects.hash(id, street, number, postalCode);
     }
 }

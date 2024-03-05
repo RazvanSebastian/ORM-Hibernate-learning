@@ -5,6 +5,10 @@ import edu.example.test.entities.associations.manyToMany.Person;
 import edu.example.test.persistence.BaseTest;
 import org.junit.jupiter.api.Test;
 
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
@@ -24,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class ManyToManyTest extends BaseTest {
 
     @Test
-    public void shouldPersistAndRemove() {
+    void shouldPersistAndRemove() {
         // given
         Person person1 = new Person("12345");
         Person person2 = new Person("67890");

@@ -22,7 +22,7 @@ public class ManyToOneTest extends BaseTest {
         entityManager.createQuery("DELETE FROM Post").executeUpdate();
         entityManager.createQuery("DELETE FROM PostComment").executeUpdate();
 
-        Post post = new Post("Hibernate post");
+        Post post = new Post("Hibernate post", "Hibernate Post description");
         entityManager.persist(post);
 
         PostComment postComment = PostComment.builder()

@@ -18,6 +18,7 @@ public class Dummy implements JpaEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @Column(unique = true)
     private String value;
 
     private int countDown;

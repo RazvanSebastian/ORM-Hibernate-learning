@@ -27,6 +27,19 @@ public class DummyJpaDaoImplTest extends BaseTest {
     }
 
     @Test
+    public void testUniqueConstrain() {
+        // given
+        Dummy dummy = new Dummy();
+        dummy.setValue("value");
+
+        dummyJpaDao.save(dummy);
+
+        Dummy dummy2 = new Dummy();
+        dummy2.setValue("value");
+        dummyJpaDao.save(dummy2);
+    }
+
+    @Test
     public void shouldSave() {
         // given
         Dummy dummy = new Dummy();
