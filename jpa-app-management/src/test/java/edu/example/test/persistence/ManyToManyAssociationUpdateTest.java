@@ -8,20 +8,21 @@ import org.junit.jupiter.api.Test;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static org.hibernate.testing.transaction.TransactionUtil.doInJPA;
 
 public class ManyToManyAssociationUpdateTest extends AbstractTest {
     AtomicLong personId = new AtomicLong();
-    AtomicLong address1Id = new AtomicLong();
-    AtomicLong address2Id = new AtomicLong();
-    AtomicLong address3Id = new AtomicLong();
+
+    AtomicReference<List<Long>> updatedList = new AtomicReference<>();
 
     @BeforeEach
     void beforeEach() {
@@ -31,29 +32,26 @@ public class ManyToManyAssociationUpdateTest extends AbstractTest {
 
             Person person = new Person();
 
-            Address address1 = new Address("Street1", "1", "1");
-            Address address2 = new Address("Street2", "2", "2");
-            Address address3 = new Address("Street3", "3", "3");
-
-            person.getAddresses().add(address1);
-            person.getAddresses().add(address2);
+            IntStream.range(1, 100)
+                    .mapToObj(i -> new Address("Street" + i, String.valueOf(i), String.valueOf(i)))
+                    .collect(Collectors.toSet())
+                    .forEach(address -> person.getAddresses().add(address));
 
             entityManager.persist(person);
-            entityManager.persist(address3);
+
+            Address newAddress = new Address();
+            entityManager.persist(newAddress);
 
             entityManager.flush();
+
+            updatedList.set(Stream.concat(person.getAddresses().stream().map(Address::getId).skip(1), Stream.of(newAddress.getId())).collect(Collectors.toList()));
             personId.set(person.getId());
-            address1Id.set(address1.getId());
-            address2Id.set(address2.getId());
-            address3Id.set(address3.getId());
         });
     }
 
     @Test
     void testUpdateAssociation() {
         doInJPA(entityManagerFactorySupplierSupplier, entityManager -> {
-            // given
-            List<Long> givenUpdatedAssociationIdsList = Arrays.asList(address2Id.get(), address3Id.get());
             Person currentPerson = retrieveEntityToUpdate(
                     entityManager,
                     "id",
@@ -64,7 +62,8 @@ public class ManyToManyAssociationUpdateTest extends AbstractTest {
             Set<Address> currentAddressAssociation = currentPerson.getAddresses();
             Set<Address> newAssociations = retrieveProvidedUpdatedAssociation(
                     entityManager,
-                    givenUpdatedAssociationIdsList,
+                    "id",
+                    updatedList.get(),
                     Address.class
             );
 
@@ -74,7 +73,6 @@ public class ManyToManyAssociationUpdateTest extends AbstractTest {
 
     private static <T> T retrieveEntityToUpdate(EntityManager entityManager, String rootIdName, Long rootId, List<String> rootAssociationNames, Class<T> clazz) {
         CriteriaQuery<T> criteriaQuery = entityManager.getCriteriaBuilder().createQuery(clazz);
-
         Root<T> root = criteriaQuery.from(clazz);
 
         rootAssociationNames.forEach(root::fetch);
@@ -84,11 +82,11 @@ public class ManyToManyAssociationUpdateTest extends AbstractTest {
         return entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
-    private static <T> Set<T> retrieveProvidedUpdatedAssociation(EntityManager entityManager, List<Long> ids, Class<T> clazz) {
+    private static <T> Set<T> retrieveProvidedUpdatedAssociation(EntityManager entityManager, String rootIdName, List<Long> ids, Class<T> clazz) {
         CriteriaQuery<T> criteriaQuery = entityManager.getCriteriaBuilder().createQuery(clazz);
         Root<T> root = criteriaQuery.from(clazz);
 
-        criteriaQuery.select(root).where(root.get("id").in(ids));
+        criteriaQuery.select(root).where(root.get(rootIdName).in(ids));
 
         return entityManager.createQuery(criteriaQuery).getResultStream().collect(Collectors.toSet());
     }

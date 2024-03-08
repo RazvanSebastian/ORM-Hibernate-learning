@@ -9,6 +9,10 @@
         <class>edu.example.test.entities.associations.manyToMany.Person</class>
         <class>edu.example.test.entities.associations.manyToMany.Address</class>
 
+        <class>edu.example.test.entities.associations.manyToManyWithExtraColumns.Employee</class>
+        <class>edu.example.test.entities.associations.manyToManyWithExtraColumns.EmployeePositionHistory</class>
+        <class>edu.example.test.entities.associations.manyToManyWithExtraColumns.Position</class>
+
         <class>edu.example.test.entities.Dummy</class>
         <class>edu.example.test.entities.lock.OptimisticVersionDummy</class>
         <class>edu.example.test.entities.lock.OptimisticDirtyDummy</class>
