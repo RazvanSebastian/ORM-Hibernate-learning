@@ -31,9 +31,12 @@ class ManyToManyAssociationWithExtraColumn extends AbstractTest {
             entityManager.persist(angularDev);
             entityManager.persist(dbDev);
 
-            employee.addPosition(javaDev);
-            employee.addPosition(angularDev);
-            employee.addPosition(dbDev);
+            entityManager.flush();
+            entityManager.clear();
+
+            employee.addPosition(entityManager.getReference(Position.class, javaDev.getId()));
+            employee.addPosition(entityManager.getReference(Position.class, angularDev.getId()));
+            employee.addPosition(entityManager.getReference(Position.class, dbDev.getId()));
 
             entityManager.persist(employee);
 
@@ -61,7 +64,7 @@ class ManyToManyAssociationWithExtraColumn extends AbstractTest {
         });
     }
 
-   private Employee getEmployee(EntityManager entityManager, Long id) {
+    private Employee getEmployee(EntityManager entityManager, Long id) {
         return entityManager.createQuery("select e from Employee e " +
                         "join fetch e.positionHistories ph " +
                         "join fetch ph.position " +
