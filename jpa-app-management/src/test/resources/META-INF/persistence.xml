@@ -13,6 +13,9 @@
         <class>edu.example.test.entities.associations.manyToManyWithExtraColumns.EmployeePositionHistory</class>
         <class>edu.example.test.entities.associations.manyToManyWithExtraColumns.Position</class>
 
+        <class>edu.example.test.entities.associations.manyToOne.Post</class>
+        <class>edu.example.test.entities.associations.manyToOne.PostComment</class>
+
         <class>edu.example.test.entities.Dummy</class>
         <class>edu.example.test.entities.lock.OptimisticVersionDummy</class>
         <class>edu.example.test.entities.lock.OptimisticDirtyDummy</class>
@@ -28,6 +31,7 @@
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL95Dialect"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.generate_statistics" value="true"/>
             <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
 
             <!--Improvement of IN clause-->

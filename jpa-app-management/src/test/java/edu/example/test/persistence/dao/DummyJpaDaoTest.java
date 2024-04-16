@@ -21,6 +21,8 @@ public class DummyJpaDaoTest {
         dummyJpaDao.clear();
     }
 
+
+
     @Test
     public void shouldSave() {
         // given

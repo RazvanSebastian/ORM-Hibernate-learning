@@ -10,7 +10,6 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>edu.example.test</groupId>
     <artifactId>jpa-entities</artifactId>
     <version>1.0-SNAPSHOT</version>
 

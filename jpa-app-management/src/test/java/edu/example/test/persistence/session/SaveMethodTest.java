@@ -4,7 +4,10 @@ import edu.example.test.entities.Dummy;
 import edu.example.test.persistence.AbstractTest;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static org.hibernate.testing.transaction.TransactionUtil.doInHibernate;
+import static org.hibernate.testing.transaction.TransactionUtil.doInJPA;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
