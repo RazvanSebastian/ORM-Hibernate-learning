@@ -15,13 +15,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * Best practices:
  * 1 Bidirectional best suited
  * 2 Owner side defines:
- *      - {@link javax.persistence.ManyToMany} contains for Cascade types, MERGE and PERSIST, only
- *      - {@link javax.persistence.JoinTable} annotation
+ *      - {@link jakarta.persistence.ManyToMany} contains for Cascade types, MERGE and PERSIST, only
+ *      - {@link jakarta.persistence.JoinTable} annotation
  *      - Add and remove methods to synchronize both sides
  *      - Equals and hashcode methods (use whenever is possible NaturalId column or a group which might create something unique)
  *      - Use {@link java.util.Set} instead of {@link java.util.List}: best performance on deleting relation
  * 3. Inverse side defines:
- *      - {@link javax.persistence.ManyToMany} contains mappedBy
+ *      - {@link jakarta.persistence.ManyToMany} contains mappedBy
  *      - Equals and hashcode methods (use whenever is possible NaturalId column or a group which might create something unique)
  *      - Use {@link java.util.Set} instead of {@link java.util.List}: best performance on deleting relation
  */

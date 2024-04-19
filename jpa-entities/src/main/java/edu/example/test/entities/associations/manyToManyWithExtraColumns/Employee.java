@@ -1,9 +1,9 @@
 package edu.example.test.entities.associations.manyToManyWithExtraColumns;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
 import java.util.*;
 
 @Getter

@@ -10,8 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * - Best way to implement is by using unidirectional association.
- * - Use @{@link javax.persistence.MapsId} to have PARENT_PK == CHILD_PK == CHILD_FK
- * - Set {@link javax.persistence.OneToOne} with fetch LAZY
+ * - Use @{@link jakarta.persistence.MapsId} to have PARENT_PK == CHILD_PK == CHILD_FK
+ * - Set {@link jakarta.persistence.OneToOne} with fetch LAZY
  * <p>
  * Behaviour:
  * - Even if it is set to lazy, TWO SELECTS WILL BE PERFORMED since hibernate doesn't know if the

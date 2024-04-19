@@ -5,23 +5,27 @@ import edu.example.test.entities.associations.manyToManyWithExtraColumns.Employe
 import edu.example.test.entities.associations.manyToManyWithExtraColumns.Position;
 import org.junit.jupiter.api.Test;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.hibernate.testing.transaction.TransactionUtil.doInJPA;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ManyToManyAssociationWithExtraColumn extends AbstractTest {
 
     @Test
-    void testInsertAndDelete() {
+    void testInsertSearchAndDelete() {
+        AtomicReference<Long> positionToSearchForEmployees = new AtomicReference<>();
         AtomicReference<Long> positionToRemove = new AtomicReference<>();
         AtomicReference<Long> positionToUpdate = new AtomicReference<>();
         AtomicReference<Long> employeeId = new AtomicReference<>();
 
         // insert
         doInJPA(entityManagerFactorySupplierSupplier, entityManager -> {
-            Employee employee = new Employee("New Employee");
+            Employee employee = new Employee("New Employee1");
+            Employee employee1 = new Employee("New Employee2");
 
             Position javaDev = new Position("Java developer");
             Position angularDev = new Position("Angular developer");
@@ -38,11 +42,21 @@ class ManyToManyAssociationWithExtraColumn extends AbstractTest {
             employee.addPosition(entityManager.getReference(Position.class, angularDev.getId()));
             employee.addPosition(entityManager.getReference(Position.class, dbDev.getId()));
 
-            entityManager.persist(employee);
+            employee1.addPosition(entityManager.getReference(Position.class, javaDev.getId()));
 
+            entityManager.persist(employee);
+            entityManager.persist(employee1);
+
+            positionToSearchForEmployees.set(javaDev.getId());
             positionToRemove.set(dbDev.getId());
             positionToUpdate.set(javaDev.getId());
             employeeId.set(employee.getId());
+        });
+
+        // get all employees with a specific position
+        doInJPA(entityManagerFactorySupplierSupplier, entityManager -> {
+            List<Employee> employees = getEmployees(entityManager, positionToSearchForEmployees.get());
+            assertEquals(2, employees.size());
         });
 
         // remove
@@ -64,12 +78,20 @@ class ManyToManyAssociationWithExtraColumn extends AbstractTest {
         });
     }
 
-    private Employee getEmployee(EntityManager entityManager, Long id) {
+    private Employee getEmployee(EntityManager entityManager, Long employeeId) {
         return entityManager.createQuery("select e from Employee e " +
                         "join fetch e.positionHistories ph " +
                         "join fetch ph.position " +
                         "where e.id = :employeeId", Employee.class)
-                .setParameter("employeeId", id)
+                .setParameter("employeeId", employeeId)
                 .getSingleResult();
+    }
+
+    private List<Employee> getEmployees(EntityManager entityManager, Long positionId) {
+        return entityManager.createQuery("select e from Employee e " +
+                        "join fetch e.positionHistories ph " +
+                        "where ph.position.id = :positionId", Employee.class)
+                .setParameter("positionId", positionId)
+                .getResultList();
     }
 }

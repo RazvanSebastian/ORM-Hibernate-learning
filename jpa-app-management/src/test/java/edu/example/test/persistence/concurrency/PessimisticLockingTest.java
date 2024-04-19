@@ -7,9 +7,9 @@ import org.hibernate.PessimisticLockException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
-import javax.persistence.LockTimeoutException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.LockTimeoutException;
 import java.util.Map;
 
 import static org.hibernate.testing.transaction.TransactionUtil.doInJPA;
@@ -87,7 +87,7 @@ public class PessimisticLockingTest extends AbstractTest {
             Dummy dummyT1 = entityManager1.find(Dummy.class, id, LockModeType.PESSIMISTIC_READ);
             doInJPA(entityManagerFactorySupplierSupplier, entityManager2 -> {
                 try {
-                    entityManager2.find(Dummy.class, id, LockModeType.PESSIMISTIC_WRITE, Map.ofEntries(Map.entry("javax.persistence.lock.timeout", 0)));
+                    entityManager2.find(Dummy.class, id, LockModeType.PESSIMISTIC_WRITE, Map.ofEntries(Map.entry("jakarta.persistence.lock.timeout", 0)));
                 } catch (RuntimeException e) {
                     assertTrue(e instanceof LockTimeoutException);
                     assertTrue(e.getCause() instanceof PessimisticLockException);
@@ -154,7 +154,7 @@ public class PessimisticLockingTest extends AbstractTest {
         Dummy dummyT1 = entityManager1.find(Dummy.class, id, LockModeType.PESSIMISTIC_READ);
         dummyT1.setValue("Changed by T1");
         try {
-            entityManager2.find(Dummy.class, id, LockModeType.PESSIMISTIC_WRITE, Map.ofEntries(Map.entry("javax.persistence.lock.timeout", 0)));
+            entityManager2.find(Dummy.class, id, LockModeType.PESSIMISTIC_WRITE, Map.ofEntries(Map.entry("jakarta.persistence.lock.timeout", 0)));
         } catch (LockTimeoutException e) {
             // rollback initial T2
             EntityManagerHelper.rollbackAndClose(entityManager2);
@@ -165,7 +165,7 @@ public class PessimisticLockingTest extends AbstractTest {
 
             // retry
             entityManager2 = EntityManagerHelper.getNewInstance();
-            Dummy dummyT2 = entityManager2.find(Dummy.class, id, LockModeType.PESSIMISTIC_WRITE, Map.ofEntries(Map.entry("javax.persistence.lock.timeout", 5000)));
+            Dummy dummyT2 = entityManager2.find(Dummy.class, id, LockModeType.PESSIMISTIC_WRITE, Map.ofEntries(Map.entry("jakarta.persistence.lock.timeout", 5000)));
             assertEquals(dummyT1.getValue(), dummyT2.getValue());
 
             // do change and commit

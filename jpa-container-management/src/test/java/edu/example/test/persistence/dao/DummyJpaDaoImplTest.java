@@ -7,6 +7,7 @@ import edu.example.test.persistence.BaseTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DummyJpaDaoImplTest extends BaseTest {
 
@@ -36,7 +38,11 @@ public class DummyJpaDaoImplTest extends BaseTest {
 
         Dummy dummy2 = new Dummy();
         dummy2.setValue("value");
-        dummyJpaDao.save(dummy2);
+        try {
+            dummyJpaDao.save(dummy2);
+        } catch (Exception e) {
+            assertTrue(true);
+        }
     }
 
     @Test

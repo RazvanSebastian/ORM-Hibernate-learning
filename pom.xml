@@ -16,30 +16,32 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <hibernate.version>5.6.15.Final</hibernate.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <hibernate.orm.version>6.4.4.Final</hibernate.orm.version>
         <h2.version>2.1.212</h2.version>
-        <log4j.version>2.12.1</log4j.version>
-        <postgresql.version>42.5.4</postgresql.version>
+        <log4j.version>2.23.1</log4j.version>
+        <postgresql.version>42.7.3</postgresql.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.hibernate</groupId>
+                <groupId>org.hibernate.orm</groupId>
                 <artifactId>hibernate-core</artifactId>
-                <version>${hibernate.version}</version>
+                <version>${hibernate.orm.version}</version>
             </dependency>
-            <!--            <dependency>-->
-            <!--                <groupId>com.h2database</groupId>-->
-            <!--                <artifactId>h2</artifactId>-->
-            <!--                <version>${h2.version}</version>-->
-            <!--            </dependency>-->
+            <dependency>
+                <groupId>org.hibernate.orm</groupId>
+                <artifactId>hibernate-testing</artifactId>
+                <version>${hibernate.orm.version}</version>
+                <scope>test</scope>
+            </dependency>
             <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
                 <version>${postgresql.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>

@@ -4,9 +4,9 @@ import edu.example.test.dao.JpaDao;
 import edu.example.test.entities.JpaEntity;
 import edu.example.test.persistence.util.EntityManagerHelper;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Id;
-import javax.persistence.TransactionRequiredException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Id;
+import jakarta.persistence.TransactionRequiredException;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;

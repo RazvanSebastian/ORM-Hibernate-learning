@@ -2,7 +2,7 @@ package edu.example.test.entities.associations.manyToOne;
 
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Getter
 @Setter

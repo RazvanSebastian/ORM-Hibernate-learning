@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Most convenient way to map one-to-many relation.
- * {@link javax.persistence.ManyToOne} fetch is EAGER ny default. Make sure to set LAZY.
+ * {@link jakarta.persistence.ManyToOne} fetch is EAGER ny default. Make sure to set LAZY.
  */
 public class ManyToOneTest extends BaseTest {
 
@@ -19,8 +19,8 @@ public class ManyToOneTest extends BaseTest {
 
     @BeforeEach
     public void clear() {
-        entityManager.createQuery("DELETE FROM Post").executeUpdate();
         entityManager.createQuery("DELETE FROM PostComment").executeUpdate();
+        entityManager.createQuery("DELETE FROM Post").executeUpdate();
 
         Post post = new Post("Hibernate post", "Hibernate Post description");
         entityManager.persist(post);

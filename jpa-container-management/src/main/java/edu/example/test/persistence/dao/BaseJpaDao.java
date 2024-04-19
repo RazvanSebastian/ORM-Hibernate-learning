@@ -4,20 +4,17 @@ import edu.example.test.dao.JpaDao;
 import edu.example.test.entities.JpaEntity;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Id;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Id;
+import jakarta.persistence.PersistenceContext;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Logger;
 
 @Transactional
 public abstract class BaseJpaDao<T extends JpaEntity, ID> implements JpaDao<T, ID> {
-    private static final Logger LOGGER = Logger.getLogger(BaseJpaDao.class.getName());
-
     private Class<T> entityClass;
 
     @PersistenceContext
@@ -29,8 +26,7 @@ public abstract class BaseJpaDao<T extends JpaEntity, ID> implements JpaDao<T, I
 
     @Override
     public T find(ID id) {
-        T entity = entityManager.find(entityClass, id);
-        return entity;
+        return entityManager.find(entityClass, id);
     }
 
     @Override

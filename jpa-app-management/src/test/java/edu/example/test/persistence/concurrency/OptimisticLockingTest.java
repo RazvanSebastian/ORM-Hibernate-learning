@@ -6,8 +6,8 @@ import edu.example.test.entities.lock.OptimisticVersionDummy;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.OptimisticLockException;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.OptimisticLockException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
@@ -86,7 +86,7 @@ public class OptimisticLockingTest {
 
     /**
      * Optimistic locking with version
-     * - Version property with annotation {@link javax.persistence.Version}
+     * - Version property with annotation {@link jakarta.persistence.Version}
      * Behaviour:
      * - If a previous transaction already changed at least one property, the version will increase in DB and
      * any other transactions which have an entity with an older version, by flush/commit changes will throw
@@ -117,7 +117,7 @@ public class OptimisticLockingTest {
     }
 
     /**
-     * Solution test for optimistic locking using {@link javax.persistence.Version}
+     * Solution test for optimistic locking using {@link jakarta.persistence.Version}
      */
     @Test
     public void testVersionOptimisticLockingSolution() {

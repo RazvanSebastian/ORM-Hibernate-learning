@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Rules:
- * - Use {@link javax.persistence.JoinColumn } in order to tells Hibernate to don't treat as ManyToMany and skip creation of intermediary table
+ * - Use {@link jakarta.persistence.JoinColumn } in order to tells Hibernate to don't treat as ManyToMany and skip creation of intermediary table
  * <p>
  * Behaviours:
  * - On child remove: firstly Hibernate will trigger an UPDATE to set the FK with null and then triggers DELETE

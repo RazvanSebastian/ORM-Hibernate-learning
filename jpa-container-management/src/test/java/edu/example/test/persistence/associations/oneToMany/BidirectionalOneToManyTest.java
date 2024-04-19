@@ -9,11 +9,11 @@ import org.junit.jupiter.api.Test;
 /**
  * Rules:
  * 1. Owning side:
- *      - {@link javax.persistence.ManyToOne}
+ *      - {@link jakarta.persistence.ManyToOne}
  *      - Set fetch to LAZY
  *      - Equals and hashcode methods (use whenever is possible NaturalId column or a group which might create something unique)
  * 2. Inverse side:
- *      - {@link javax.persistence.OneToMany}
+ *      - {@link jakarta.persistence.OneToMany}
  *      - Set fetch LAZY
  *      - Orphan removal: true
  *      - mappedBy
