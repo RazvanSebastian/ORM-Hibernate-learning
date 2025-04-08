@@ -18,9 +18,9 @@ public class BidirectionalPerson {
 
     @OneToMany(
             fetch = FetchType.LAZY,
-            orphanRemoval = true,
             mappedBy = "person")
     private List<BidirectionalPhone> phones = new ArrayList<>();
+
 
     public void addPhone(BidirectionalPhone phone) {
         this.phones.add(phone);

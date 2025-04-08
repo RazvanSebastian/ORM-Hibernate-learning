@@ -6,6 +6,8 @@ import edu.example.test.persistence.BaseTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -89,5 +91,16 @@ public class ManyToOneTest extends BaseTest {
                 .getSingleResult();
 
         assertNotNull(post);
+    }
+
+    @Test
+    public void shouldRetrieveAllPostCommentsOfPost() {
+        entityManager.clear();
+
+        List<PostComment> postComments = entityManager.createQuery("SELECT pc FROM PostComment pc WHERE pc.post.id = :postId")
+                .setParameter("postId", this.postId)
+                .getResultList();
+
+        assertEquals(1, postComments.size());
     }
 }

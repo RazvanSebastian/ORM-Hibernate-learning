@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import static org.hibernate.testing.transaction.TransactionUtil.doInJPA;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ManyToManyAssociationWithExtraColumn extends AbstractTest {
+class ManyToManyAssociationWithExtraColumnTest extends AbstractTest {
 
     @Test
     void testInsertSearchAndDelete() {

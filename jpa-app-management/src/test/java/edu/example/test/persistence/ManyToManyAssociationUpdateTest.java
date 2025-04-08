@@ -2,17 +2,20 @@ package edu.example.test.persistence;
 
 import edu.example.test.entities.associations.manyToMany.Address;
 import edu.example.test.entities.associations.manyToMany.Person;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -67,7 +70,7 @@ public class ManyToManyAssociationUpdateTest extends AbstractTest {
                     Address.class
             );
 
-            updateAssociation(currentPerson.getAddresses(), newAssociations, currentAddressAssociation::remove, currentAddressAssociation::add);
+            updateAssociation(currentPerson.getAddresses(), newAssociations, currentAddressAssociation::remove, currentAddressAssociation::add, ArrayList::new);
         });
     }
 
@@ -91,11 +94,11 @@ public class ManyToManyAssociationUpdateTest extends AbstractTest {
         return entityManager.createQuery(criteriaQuery).getResultStream().collect(Collectors.toSet());
     }
 
-    public static <T> void updateAssociation(Set<T> currentAssociations, Set<T> newAssociations, Consumer<T> removeFromCurrent, Consumer<T> addToCurrent) {
-        Set<T> associationsToRemove = currentAssociations
+    public static <T> void updateAssociation(Collection<T> currentAssociations, Collection<T> newAssociations, Consumer<T> removeFromCurrent, Consumer<T> addToCurrent, Supplier<Collection<T>> collectionFactory) {
+        Collection<T> associationsToRemove = currentAssociations
                 .stream()
                 .filter(userEntity -> !newAssociations.contains(userEntity))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toCollection(collectionFactory));
 
         associationsToRemove.forEach(removeFromCurrent);
 

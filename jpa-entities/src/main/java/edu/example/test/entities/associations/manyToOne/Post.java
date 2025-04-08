@@ -6,6 +6,8 @@ import lombok.Setter;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,6 +22,8 @@ public class Post {
 
     private String description;
 
+    private LocalDate createdOn;
+
     public Post(String title) {
         this.title = title;
     }
@@ -27,5 +31,10 @@ public class Post {
     public Post(String title, String description) {
         this.title = title;
         this.description = description;
+    }
+
+    public Post(String title, LocalDate createdOn) {
+        this.title = title;
+        this.createdOn = createdOn;
     }
 }

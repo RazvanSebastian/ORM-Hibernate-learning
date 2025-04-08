@@ -60,4 +60,11 @@ public class Person {
     public int hashCode() {
         return Objects.hash(codeNumber);
     }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "codeNumber='" + codeNumber + '\'' +
+                '}';
+    }
 }
